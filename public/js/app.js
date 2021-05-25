@@ -1,23 +1,21 @@
-// // const getPuzzle = async () => {
-// //   try {
-// //     const res = await fetch("http://puzzle.mead.io/puzzle");
-// //     const data = await res.json();
-// //     console.log(data);
-// //   } catch (err) {
-// //     console.log(err);
-// //   }
-// // };
+const weatherForm = document.querySelector("form");
+const search = document.querySelector("input");
+const messageOne = document.querySelector("#message-1");
+const messageTwo = document.querySelector("#message-2");
 
-// // getPuzzle();
+weatherForm.addEventListener("submit", e => {
+  e.preventDefault();
 
-const getWeatherForecast = async () => {
-  try {
-    const res = await fetch("http://localhost:3000/weather?address=boston");
-    const data = await res.json();
-    console.log(data);
-  } catch (err) {
-    console.log(err);
-  }
-};
+  const location = search.value;
 
-getWeatherForecast();
+  messageOne.textContent = "Loading...";
+  messageTwo.textContent = "";
+
+  fetch(`http://localhost:3000/weather?address=${location}`).then(response => {
+    response.json().then(data => {
+      if (data.error) return (messageOne.textContent = data.error);
+      else messageOne.textContent = data.location;
+      messageTwo.textContent = data.forecast;
+    });
+  });
+});
